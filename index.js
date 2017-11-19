@@ -86,7 +86,7 @@ function processV1Request (request, response) {
     }
   }
 
-  getAnimes(params) {
+  function getAnimes(params) {
     	const API = await shikimori
   		const resp = await API.get('/animes', { params })
       return Promise.all(resp.data.map(a => API.get('/animes/' + a.id)))

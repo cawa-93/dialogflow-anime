@@ -49,9 +49,9 @@ function processV1Request (request, response) {
     },
     'SearchQuery.more': async function () {
       var q = new SearchQuery(parameters)
-      let params = q.toApi()
       console.log(q)
-      params.page = (params.page || 1) + 1
+      q.page = (q.page || 1) + 1
+      let params = q.toApi()
       const animes = await getAnimes(params)
       sendResponse({
         displayText: AnswerFactory.getAnswer(q, animes).text,
@@ -64,7 +64,7 @@ function processV1Request (request, response) {
         contextOut: [{
           name: 'searchquery',
           lifespan: '5',
-          parameters: params,
+          parameters: q,
         }],
       })
     },

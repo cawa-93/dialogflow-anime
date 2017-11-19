@@ -36,10 +36,11 @@ function processV1Request (request, response) {
     'SearchQuery': async function () {
       var q = new SearchQuery(parameters)
       const animes = await getAnimes(q.toApi())
+      console.log(inputContexts)
       sendResponse({
         // displayText: AnswerFactory.getAnswer(q, animes).text,
         contextOut: [{
-          name: 'SearchQuery-result',
+          name: 'anime',
           parameters: {
             anime: AnswerFactory.getAnswer(q, animes).text
           }
@@ -54,11 +55,11 @@ function processV1Request (request, response) {
       sendResponse({
         // displayText: AnswerFactory.getAnswer(q, animes).text,
         contextOut: [{
-          name: 'SearchQuery',
+          name: 'searchquery',
           lifespan: '5',
           parameters: params
         },{
-          name: 'SearchQuery-result',
+          name: 'anime',
           parameters: {
             anime: AnswerFactory.getAnswer(q, animes).text
           }

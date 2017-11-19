@@ -4,13 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cawa-93/dialogflow-anime.git"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -18,6 +17,8 @@
   },
   "homepage": "https://github.com/cawa-93/dialogflow-anime#readme",
   "dependencies": {
+    "axios": "^0.17.1",
+    "body-parser": "^1.18.2",
     "express": "^4.16.2"
   }
 }

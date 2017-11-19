@@ -1,41 +1,51 @@
-var express = require('express')
-var app = express()
+const express = require('express'); // Cloud Functions for Firebase library
+const app = express();
+var bodyParser = require('body-parser');
+const SearchQuery = require('./libs/SearchQuery')
+const shikimori = require('./libs/shikimori').getShikimoriApi({
+	nickname: process.env.NICKNAME,
+	password: process.env.PASSWORD,
+})
 
-// respond with "hello world" when a GET request is made to the homepage
-app.post('/webHooks', function (request, response) {
-  console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+app.post('/webHook', function (request, response) {
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
-  if (request.body.result) {
+
+  if (request.body && request.body.result) {
     processV1Request(request, response);
   } else {
     console.log('Invalid Request');
-    return response.status(400).end('Invalid Webhook Request (expecting v1 or v2 webhook request)');
+    return response.status(400).end('Invalid Webhook Request (expecting v1 webhook request)');
   }
 })
 
+app.listen(process.env.PORT, () => console.log('WebHook server listening on port 3000!'))
 
-/*
-* Function to handle v1 webhook requests from Dialogflow
-*/
 function processV1Request (request, response) {
   let action = request.body.result.action; // https://dialogflow.com/docs/actions-and-parameters
   let parameters = request.body.result.parameters; // https://dialogflow.com/docs/actions-and-parameters
   let inputContexts = request.body.result.contexts; // https://dialogflow.com/docs/contexts
   let requestSource = (request.body.originalRequest) ? request.body.originalRequest.source : undefined;
+
   // Create handlers for Dialogflow actions as well as a 'default' handler
   const actionHandlers = {
     // The default welcome intent has been matched, welcome the user (https://dialogflow.com/docs/events#default_welcome_intent)
-    'SearchQuery': () => {
-    	console.log(parameters)
-    	console.log(inputContexts)
-      // Use the Actions on Google lib to respond to Google requests; for other requests use JSON
-      sendResponse('Привет от хероку !');
-    },
+    'SearchQuery': async function () {
+    	const API = await shikimori
+  		var q = new SearchQuery(parameters)
+  		const animes = (await API.get('/animes', { params: q.toApi() })).data
+			// console.log(animes)
+			sendResponse(animes.map(a => a.name).join(', '))
+    }
   };
+
   // If undefined or unknown action use the default handler
   if (!actionHandlers[action]) {
     action = 'default';
   }
+
   // Run the proper handler function to handle the request from Dialogflow
   actionHandlers[action]();
 
@@ -57,6 +67,7 @@ function processV1Request (request, response) {
       responseJson.data = responseToUser.data;
       // Optional: add contexts (https://dialogflow.com/docs/contexts)
       responseJson.contextOut = responseToUser.outputContexts;
+
       console.log('Response to Dialogflow: ' + JSON.stringify(responseJson));
       response.json(responseJson); // Send response to Dialogflow
     }

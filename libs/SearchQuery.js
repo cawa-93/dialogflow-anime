@@ -1,6 +1,6 @@
 /** @module */
 // const qs = require('qs')
-// const database = require('./database')
+const database = require('./database')
 
 class SearchQuery {
 	/**
@@ -37,8 +37,8 @@ class SearchQuery {
 		Object.keys(this).forEach(k => {
 			if (this[k] == null)
 				return
-			if (typeof this[k] == 'object' && !Array.isArray(this[k])) {
-				result[k] = this[k].id
+			if (k === 'genre') {
+				result.genre = this.genre.map(genre => database.genres[genre]).join(',')
 			} else {
 				result[k] = Array.isArray(this[k]) ? this[k].join(',') : this[k]
 			}

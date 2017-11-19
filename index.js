@@ -101,7 +101,7 @@ function processV1Request (request, response) {
         }
       };
       // Optional: add contexts (https://dialogflow.com/docs/contexts)
-      responseJson.contextOut = responseToUser.outputContexts;
+      responseJson.contextOut = responseToUser.contextOut;
 
       
       response.json(responseJson); // Send response to Dialogflow

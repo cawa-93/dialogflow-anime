@@ -72,11 +72,11 @@ function processV1Request (request, response) {
       let responseJson = {};
       responseJson.speech = responseToUser; // spoken response
       responseJson.displayText = responseToUser; // displayed response
-      responseJson.data = {
-        telegram: {
-          parse_mode: 'HTML'
-        }
-      };
+      // responseJson.data = {
+      //   telegram: {
+      //     parse_mode: 'HTML'
+      //   }
+      // };
       response.json(responseJson); // Send response to Dialogflow
     } else {
       // If the response to the user includes rich responses or contexts send them to Dialogflow

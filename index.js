@@ -38,28 +38,29 @@ function processV1Request (request, response) {
       const animes = await getAnimes(q.toApi())
       console.log(inputContexts)
       sendResponse({
+        displayText: '<i>displayText</i>'
         data: {
           telegram: {
             parse_mode: 'HTML'
-            text: displayText: AnswerFactory.getAnswer(q, animes).text,
+            text: '<b>text</b>'
           }
         }
       })
     },
-    'SearchQuery.more': async function () {
-      var q = new SearchQuery(parameters)
-      let params = q.toApi()
-      params.page = (params.page || 0) + 1
-      const animes = await getAnimes(params)
-      sendResponse({
-        displayText: AnswerFactory.getAnswer(q, animes).text,
-        contextOut: [{
-          name: 'searchquery',
-          lifespan: '5',
-          parameters: params
-        }]
-      })
-    },
+    // 'SearchQuery.more': async function () {
+    //   var q = new SearchQuery(parameters)
+    //   let params = q.toApi()
+    //   params.page = (params.page || 0) + 1
+    //   const animes = await getAnimes(params)
+    //   sendResponse({
+    //     displayText: AnswerFactory.getAnswer(q, animes).text,
+    //     contextOut: [{
+    //       name: 'searchquery',
+    //       lifespan: '5',
+    //       parameters: params
+    //     }]
+    //   })
+    // },
   };
 
   console.log(action, parameters)

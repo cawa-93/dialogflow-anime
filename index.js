@@ -2,6 +2,7 @@ const express = require('express'); // Cloud Functions for Firebase library
 const app = express();
 var bodyParser = require('body-parser');
 const SearchQuery = require('./libs/SearchQuery')
+const AnswerFactory = require('./libs/AnswerFactory')
 const shikimori = require('./libs/shikimori').getShikimoriApi({
 	nickname: process.env.NICKNAME,
 	password: process.env.PASSWORD,
@@ -33,12 +34,24 @@ function processV1Request (request, response) {
   const actionHandlers = {
     // The default welcome intent has been matched, welcome the user (https://dialogflow.com/docs/events#default_welcome_intent)
     'SearchQuery': async function () {
-    	const API = await shikimori
-  		var q = new SearchQuery(parameters)
-  		const animes = (await API.get('/animes', { params: q.toApi() })).data
-			// console.log(animes)
-			sendResponse(animes.map(a => a.name).join(', '))
-    }
+      var q = new SearchQuery(parameters)
+      const animes = getAnimes(q.toApi())
+      sendResponse(AnswerFactory.getAnswer(q, animes))
+    },
+    'SearchQuery.more': async function () {
+      var q = new SearchQuery(parameters)
+      let params = q.toApi()
+      params.page = (params.page || 0) + 1
+      const animes = getAnimes(params)
+      sendResponse({
+        displayText: AnswerFactory.getAnswer(q, animes),
+        contextOut: {
+          name: 'SearchQuery',
+          lifespan: '5',
+          params
+        }
+      })
+    },
   };
 
   // If undefined or unknown action use the default handler
@@ -71,5 +84,11 @@ function processV1Request (request, response) {
       console.log('Response to Dialogflow: ' + JSON.stringify(responseJson));
       response.json(responseJson); // Send response to Dialogflow
     }
+  }
+
+  getAnimes(params) {
+    	const API = await shikimori
+  		const resp = await API.get('/animes', { params })
+      return Promise.all(resp.data.map(a => API.get('/animes/' + a.id)))
   }
 }

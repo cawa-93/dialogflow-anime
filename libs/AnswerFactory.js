@@ -62,11 +62,11 @@ class AnswerFactory {
 
 		let template = getRandomItem(allowed).text
 
-		let callback_data = query.toApi()
+		// let callback_data = query.toApi()
 
 		const answer = {
 			text: this._parseAnswer(template, result, query),
-			params: this.getMessParams(qs.stringify(callback_data)),
+			// params: this.getMessParams(qs.stringify(callback_data)),
 		}
 		return answer
 	}

@@ -52,12 +52,17 @@ function processV1Request (request, response) {
       params.page = (params.page || 0) + 1
       const animes = await getAnimes(params)
       sendResponse({
-        displayText: AnswerFactory.getAnswer(q, animes).text,
+        data: {
+          telegram: {
+            text: AnswerFactory.getAnswer(q, animes).text,
+            parse_mode: 'HTML',
+          },
+        },
         contextOut: [{
           name: 'searchquery',
           lifespan: '5',
-          parameters: params
-        }]
+          parameters: params,
+        }],
       })
     },
   };

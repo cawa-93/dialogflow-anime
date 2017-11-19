@@ -35,16 +35,18 @@ function processV1Request (request, response) {
     // The default welcome intent has been matched, welcome the user (https://dialogflow.com/docs/events#default_welcome_intent)
     'SearchQuery': async function () {
       var q = new SearchQuery(parameters)
-      const animes = getAnimes(q.toApi())
-      sendResponse(AnswerFactory.getAnswer(q, animes))
+      console.log(q.toApi())
+      const animes = await getAnimes(q.toApi())
+      console.log(animes)
+      sendResponse(AnswerFactory.getAnswer(q, animes).text)
     },
     'SearchQuery.more': async function () {
       var q = new SearchQuery(parameters)
       let params = q.toApi()
       params.page = (params.page || 0) + 1
-      const animes = getAnimes(params)
+      const animes = await getAnimes(params)
       sendResponse({
-        displayText: AnswerFactory.getAnswer(q, animes),
+        displayText: AnswerFactory.getAnswer(q, animes).text,
         contextOut: {
           name: 'SearchQuery',
           lifespan: '5',
@@ -86,7 +88,7 @@ function processV1Request (request, response) {
     }
   }
 
-  function getAnimes(params) {
+  async function getAnimes(params) {
     	const API = await shikimori
   		const resp = await API.get('/animes', { params })
       return Promise.all(resp.data.map(a => API.get('/animes/' + a.id)))

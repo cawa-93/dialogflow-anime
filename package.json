@@ -1,0 +1,23 @@
+{
+  "name": "dialogflow-anime",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cawa-93/dialogflow-anime.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cawa-93/dialogflow-anime/issues"
+  },
+  "homepage": "https://github.com/cawa-93/dialogflow-anime#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}

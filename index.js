@@ -48,19 +48,19 @@ function processV1Request (request, response) {
         contextOut: [{
           name: 'SearchQuery',
           lifespan: '5',
-          params
+          parameters: params
         }]
       })
     },
   };
 
+  console.log(action, parameters)
   // If undefined or unknown action use the default handler
-  if (!actionHandlers[action]) {
-    action = 'default';
+  if (actionHandlers[action]) {
+    actionHandlers[action]();
   }
 
   // Run the proper handler function to handle the request from Dialogflow
-  actionHandlers[action]();
 
   // Function to send correctly formatted responses to Dialogflow which are then sent to the user
   function sendResponse (responseToUser) {
@@ -69,6 +69,11 @@ function processV1Request (request, response) {
       let responseJson = {};
       responseJson.speech = responseToUser; // spoken response
       responseJson.displayText = responseToUser; // displayed response
+      responseJson.data = {
+        telegram: {
+          parse_mode: 'HTML'
+        }
+      };
       response.json(responseJson); // Send response to Dialogflow
     } else {
       // If the response to the user includes rich responses or contexts send them to Dialogflow

@@ -85,11 +85,11 @@ function processV1Request (request, response) {
       responseJson.speech = responseToUser.speech || responseToUser.displayText;
       responseJson.displayText = responseToUser.displayText || responseToUser.speech;
       // Optional: add rich messages for integrations (https://dialogflow.com/docs/rich-messages)
-      responseJson.data = responseToUser.data || {
+      responseJson.data = responseToUser.data /* || {
         telegram: {
           parse_mode: 'HTML'
         }
-      };
+      };*/
       // Optional: add contexts (https://dialogflow.com/docs/contexts)
       responseJson.contextOut = responseToUser.contextOut;
 

@@ -39,7 +39,7 @@ function processV1Request (request, response) {
       // console.log(inputContexts)
       sendResponse({
         displayText: AnswerFactory.getAnswer(q, animes).text,
-        data: {
+        data: { 
           telegram: {
             text: AnswerFactory.getAnswer(q, animes).text,
             parse_mode: 'HTML',
@@ -99,7 +99,7 @@ function processV1Request (request, response) {
       // Optional: add rich messages for integrations (https://dialogflow.com/docs/rich-messages)
       responseJson.data = responseToUser.data
       // if (responseJson.data.telegram && !responseJson.data.telegram.text) {
-        
+
       // }
       // Optional: add contexts (https://dialogflow.com/docs/contexts)
       responseJson.contextOut = responseToUser.contextOut;

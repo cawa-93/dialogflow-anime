@@ -34,14 +34,13 @@ function processV1Request (request, response) {
   const actionHandlers = {
     // The default welcome intent has been matched, welcome the user (https://dialogflow.com/docs/events#default_welcome_intent)
     'SearchQuery': async function () {
-      // var q = new SearchQuery(parameters)
-      // const animes = await getAnimes(q.toApi())
+      var q = new SearchQuery(parameters)
+      const animes = await getAnimes(q.toApi())
       // console.log(inputContexts)
       sendResponse({
-        // displayText: '<i>displayText</i>'
         data: {
           telegram: {
-            text: 'This <b>text *was* sent</b> in the `data` field',
+            text: AnswerFactory.getAnswer(q, animes).text,
             parse_mode: 'HTML',
           }
         }

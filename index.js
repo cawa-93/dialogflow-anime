@@ -40,7 +40,7 @@ function processV1Request (request, response) {
       sendResponse({
         // displayText: AnswerFactory.getAnswer(q, animes).text,
         contextOut: [{
-          name: 'anime',
+          name: 'searchquery-result',
           parameters: {
             anime: AnswerFactory.getAnswer(q, animes).text
           }
@@ -59,7 +59,7 @@ function processV1Request (request, response) {
           lifespan: '5',
           parameters: params
         },{
-          name: 'anime',
+          name: 'searchquery-result',
           parameters: {
             anime: AnswerFactory.getAnswer(q, animes).text
           }

@@ -91,6 +91,6 @@ function processV1Request (request, response) {
   async function getAnimes(params) {
     	const API = await shikimori
   		const resp = await API.get('/animes', { params })
-      return Promise.all(resp.data.map(a => API.get('/animes/' + a.id)))
+      return Promise.all(resp.data.map(a => API.get('/animes/' + a.id).then(resp => resp.data)))
   }
 }

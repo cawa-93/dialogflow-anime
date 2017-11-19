@@ -38,7 +38,7 @@ function processV1Request (request, response) {
       const animes = await getAnimes(q.toApi())
       // console.log(inputContexts)
       sendResponse({
-        speech: AnswerFactory.getAnswer(q, animes).text,
+        displayText: AnswerFactory.getAnswer(q, animes).text,
         data: {
           telegram: {
             parse_mode: 'HTML',
@@ -93,8 +93,8 @@ function processV1Request (request, response) {
       // If the response to the user includes rich responses or contexts send them to Dialogflow
       let responseJson = {};
       // If speech or displayText is defined, use it to respond (if one isn't defined use the other's value)
-      // responseJson.speech = responseToUser.speech || responseToUser.displayText;
-      // responseJson.displayText = responseToUser.displayText || responseToUser.speech;
+      responseJson.speech = responseToUser.speech || responseToUser.displayText;
+      responseJson.displayText = responseToUser.displayText || responseToUser.speech;
       // Optional: add rich messages for integrations (https://dialogflow.com/docs/rich-messages)
       responseJson.data = responseToUser.data /* || {
         telegram: {

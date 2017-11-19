@@ -38,9 +38,9 @@ function processV1Request (request, response) {
       const animes = await getAnimes(q.toApi())
       // console.log(inputContexts)
       sendResponse({
+        speech: AnswerFactory.getAnswer(q, animes).text,
         data: {
           telegram: {
-            text: AnswerFactory.getAnswer(q, animes).text,
             parse_mode: 'HTML',
           }
         }

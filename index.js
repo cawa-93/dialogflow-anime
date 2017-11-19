@@ -35,9 +35,7 @@ function processV1Request (request, response) {
     // The default welcome intent has been matched, welcome the user (https://dialogflow.com/docs/events#default_welcome_intent)
     'SearchQuery': async function () {
       var q = new SearchQuery(parameters)
-      console.log(q.toApi())
       const animes = await getAnimes(q.toApi())
-      console.log(animes)
       sendResponse(AnswerFactory.getAnswer(q, animes).text)
     },
     'SearchQuery.more': async function () {
@@ -79,11 +77,15 @@ function processV1Request (request, response) {
       responseJson.speech = responseToUser.speech || responseToUser.displayText;
       responseJson.displayText = responseToUser.displayText || responseToUser.speech;
       // Optional: add rich messages for integrations (https://dialogflow.com/docs/rich-messages)
-      responseJson.data = responseToUser.data;
+      responseJson.data = responseToUser.data || {
+        telegram: {
+          parse_mode: 'HTML'
+        }
+      };
       // Optional: add contexts (https://dialogflow.com/docs/contexts)
       responseJson.contextOut = responseToUser.outputContexts;
 
-      console.log('Response to Dialogflow: ' + JSON.stringify(responseJson));
+      
       response.json(responseJson); // Send response to Dialogflow
     }
   }

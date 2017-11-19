@@ -95,8 +95,8 @@ class AnswerFactory {
 			// template = template.replace('{{similar}}', this._getSingleItem(query.similar, false))
 
 		return template
-			.replace('{list}', this._getListItems(result))
-			.replace('{name}', this._getSingleItem(result[0]))
+			.replace('{{list}}', this._getListItems(result))
+			.replace('{{name}}', this._getSingleItem(result[0]))
 	}
 
 	static _getSingleItem(item, addScore = true) {

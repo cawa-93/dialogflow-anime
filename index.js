@@ -41,8 +41,8 @@ function processV1Request (request, response) {
         // displayText: '<i>displayText</i>'
         data: {
           telegram: {
-            text: 'This text *was* sent in the `data` field'
-            parse_mode: 'Markdown'
+            text: 'This text *was* sent in the `data` field',
+            parse_mode: 'Markdown',
           }
         }
       })

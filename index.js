@@ -47,11 +47,11 @@ function processV1Request (request, response) {
       const animes = await getAnimes(params)
       sendResponse({
         displayText: AnswerFactory.getAnswer(q, animes).text,
-        contextOut: {
+        contextOut: [{
           name: 'SearchQuery',
           lifespan: '5',
           params
-        }
+        }]
       })
     },
   };

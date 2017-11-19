@@ -38,7 +38,12 @@ function processV1Request (request, response) {
       const animes = await getAnimes(q.toApi())
       console.log(inputContexts)
       sendResponse({
-        displayText: AnswerFactory.getAnswer(q, animes).text,
+        data: {
+          telegram: {
+            parse_mode: 'HTML'
+            text: displayText: AnswerFactory.getAnswer(q, animes).text,
+          }
+        }
       })
     },
     'SearchQuery.more': async function () {

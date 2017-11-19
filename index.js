@@ -34,15 +34,15 @@ function processV1Request (request, response) {
   const actionHandlers = {
     // The default welcome intent has been matched, welcome the user (https://dialogflow.com/docs/events#default_welcome_intent)
     'SearchQuery': async function () {
-      var q = new SearchQuery(parameters)
-      const animes = await getAnimes(q.toApi())
-      console.log(inputContexts)
+      // var q = new SearchQuery(parameters)
+      // const animes = await getAnimes(q.toApi())
+      // console.log(inputContexts)
       sendResponse({
-        displayText: '<i>displayText</i>'
+        // displayText: '<i>displayText</i>'
         data: {
           telegram: {
-            parse_mode: 'HTML'
-            text: '<b>text</b>'
+            text: 'This text *was* sent in the `data` field'
+            parse_mode: 'Markdown'
           }
         }
       })
@@ -63,7 +63,7 @@ function processV1Request (request, response) {
     // },
   };
 
-  console.log(action, parameters)
+  // console.log(action, parameters)
   // If undefined or unknown action use the default handler
   if (actionHandlers[action]) {
     actionHandlers[action]();
@@ -88,8 +88,8 @@ function processV1Request (request, response) {
       // If the response to the user includes rich responses or contexts send them to Dialogflow
       let responseJson = {};
       // If speech or displayText is defined, use it to respond (if one isn't defined use the other's value)
-      responseJson.speech = responseToUser.speech || responseToUser.displayText;
-      responseJson.displayText = responseToUser.displayText || responseToUser.speech;
+      // responseJson.speech = responseToUser.speech || responseToUser.displayText;
+      // responseJson.displayText = responseToUser.displayText || responseToUser.speech;
       // Optional: add rich messages for integrations (https://dialogflow.com/docs/rich-messages)
       responseJson.data = responseToUser.data /* || {
         telegram: {

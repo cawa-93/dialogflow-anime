@@ -39,9 +39,9 @@ function processV1Request (request, response) {
       sendResponse({
         // displayText: AnswerFactory.getAnswer(q, animes).text,
         contextOut: [{
-          name: 'Animes',
+          name: 'SearchQuery-result',
           parameters: {
-            result: AnswerFactory.getAnswer(q, animes).text
+            anime: AnswerFactory.getAnswer(q, animes).text
           }
         }]
       })
@@ -58,9 +58,9 @@ function processV1Request (request, response) {
           lifespan: '5',
           parameters: params
         },{
-          name: 'Animes',
+          name: 'SearchQuery-result',
           parameters: {
-            result: AnswerFactory.getAnswer(q, animes).text
+            anime: AnswerFactory.getAnswer(q, animes).text
           }
         }]
       })

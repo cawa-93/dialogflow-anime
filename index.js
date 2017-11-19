@@ -39,7 +39,7 @@ function processV1Request (request, response) {
       // console.log(inputContexts)
       sendResponse({
         displayText: AnswerFactory.getAnswer(q, animes).text,
-        data: { 
+        data: {
           telegram: {
             text: AnswerFactory.getAnswer(q, animes).text,
             parse_mode: 'HTML',
@@ -47,26 +47,27 @@ function processV1Request (request, response) {
         }
       })
     },
-    // 'SearchQuery.more': async function () {
-    //   var q = new SearchQuery(parameters)
-    //   let params = q.toApi()
-    //   console.log(q)
-    //   params.page = (params.page || 1) + 1
-    //   const animes = await getAnimes(params)
-    //   sendResponse({
-    //     data: {
-    //       telegram: {
-    //         text: AnswerFactory.getAnswer(q, animes).text,
-    //         parse_mode: 'HTML',
-    //       },
-    //     },
-    //     contextOut: [{
-    //       name: 'searchquery',
-    //       lifespan: '5',
-    //       parameters: params,
-    //     }],
-    //   })
-    // },
+    'SearchQuery.more': async function () {
+      var q = new SearchQuery(parameters)
+      let params = q.toApi()
+      console.log(q)
+      params.page = (params.page || 1) + 1
+      const animes = await getAnimes(params)
+      sendResponse({
+        displayText: AnswerFactory.getAnswer(q, animes).text,
+        data: {
+          telegram: {
+            text: AnswerFactory.getAnswer(q, animes).text,
+            parse_mode: 'HTML',
+          },
+        },
+        contextOut: [{
+          name: 'searchquery',
+          lifespan: '5',
+          parameters: params,
+        }],
+      })
+    },
   };
 
   // console.log(action, parameters)
@@ -98,9 +99,7 @@ function processV1Request (request, response) {
       responseJson.displayText = responseToUser.displayText || responseToUser.speech;
       // Optional: add rich messages for integrations (https://dialogflow.com/docs/rich-messages)
       responseJson.data = responseToUser.data
-      // if (responseJson.data.telegram && !responseJson.data.telegram.text) {
 
-      // }
       // Optional: add contexts (https://dialogflow.com/docs/contexts)
       responseJson.contextOut = responseToUser.contextOut;
 

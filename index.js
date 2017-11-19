@@ -38,13 +38,7 @@ function processV1Request (request, response) {
       const animes = await getAnimes(q.toApi())
       console.log(inputContexts)
       sendResponse({
-        // displayText: AnswerFactory.getAnswer(q, animes).text,
-        contextOut: [{
-          name: 'searchquery-result',
-          parameters: {
-            anime: AnswerFactory.getAnswer(q, animes).text
-          }
-        }]
+        displayText: AnswerFactory.getAnswer(q, animes).text,
       })
     },
     'SearchQuery.more': async function () {
@@ -53,16 +47,11 @@ function processV1Request (request, response) {
       params.page = (params.page || 0) + 1
       const animes = await getAnimes(params)
       sendResponse({
-        // displayText: AnswerFactory.getAnswer(q, animes).text,
+        displayText: AnswerFactory.getAnswer(q, animes).text,
         contextOut: [{
           name: 'searchquery',
           lifespan: '5',
           parameters: params
-        },{
-          name: 'searchquery-result',
-          parameters: {
-            anime: AnswerFactory.getAnswer(q, animes).text
-          }
         }]
       })
     },

@@ -86,7 +86,7 @@ class Answer {
 	static getFulfillmentMessages(query, result = []) {
 		const messeges = []
 
-		const names = result.map(a => this.[`_getSingleItem_${this.requestSource}`](a))
+		const names = result.map(a => this[`_getSingleItem_${this.requestSource}`](a))
 
 		console.log(...names)
 

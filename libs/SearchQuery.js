@@ -16,14 +16,14 @@ class SearchQuery {
 	 * @property {?number} page Параметр пагинации
 	 */
 	constructor(options) {
-		const mastBeArray = [
-			'genre', 'type', 'rating', 'season',
-		]
 		Object.keys(options).forEach(k => {
 			if (!options[k] || (Array.isArray(options[k]) && !options[k].length))
 				return
 			else {
 				this[k] = options[k]
+			}
+			if (this.genre && this.genre.length && this.genre.indexOf('all') !== -1) {
+				delete this.genre
 			}
 		})
 	}

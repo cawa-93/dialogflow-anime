@@ -1,116 +1,69 @@
 const express = require('express'); // Cloud Functions for Firebase library
 const app = express();
-var bodyParser = require('body-parser');
-const SearchQuery = require('./libs/SearchQuery')
-const AnswerFactory = require('./libs/AnswerFactory')
-const shikimori = require('./libs/shikimori').getShikimoriApi({
-	nickname: process.env.NICKNAME,
-	password: process.env.PASSWORD,
-})
+const bodyParser = require('body-parser');
+const Answer = require('./libs/Answer')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.post('/webHook', function (request, response) {
-  console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
+  // console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
-  if (request.body && request.body.result) {
-    processV1Request(request, response);
+  if (request.body.queryResult) {
+    processV2Request(request, response);
   } else {
     console.log('Invalid Request');
-    return response.status(400).end('Invalid Webhook Request (expecting v1 webhook request)');
+    return response.status(400).end('Invalid Webhook Request (expecting v2 webhook request)');
   }
 })
 
 app.listen(process.env.PORT, () => console.log('WebHook server listening on port 3000!'))
 
-function processV1Request (request, response) {
-  let action = request.body.result.action; // https://dialogflow.com/docs/actions-and-parameters
-  let parameters = request.body.result.parameters; // https://dialogflow.com/docs/actions-and-parameters
-  let inputContexts = request.body.result.contexts; // https://dialogflow.com/docs/contexts
-  let requestSource = (request.body.originalRequest) ? request.body.originalRequest.source : undefined;
-
-  // Create handlers for Dialogflow actions as well as a 'default' handler
-  const actionHandlers = {
-    // The default welcome intent has been matched, welcome the user (https://dialogflow.com/docs/events#default_welcome_intent)
-    'SearchQuery': async function () {
-      var q = new SearchQuery(parameters)
-      const animes = await getAnimes(q.toApi())
-      // console.log(inputContexts)
-      sendResponse({
-        displayText: AnswerFactory.getAnswer(q, animes).text,
-        data: {
-          telegram: {
-            text: AnswerFactory.getAnswer(q, animes).text,
-            parse_mode: 'HTML',
-          }
-        }
-      })
-    },
-    'SearchQuery.more': async function () {
-      var q = new SearchQuery(parameters)
-      console.log(q)
-      q.page = (q.page || 1) + 1
-      let params = q.toApi()
-      const animes = await getAnimes(params)
-      sendResponse({
-        displayText: AnswerFactory.getAnswer(q, animes).text,
-        data: {
-          telegram: {
-            text: AnswerFactory.getAnswer(q, animes).text,
-            parse_mode: 'HTML',
-          },
-        },
-        contextOut: [{
-          name: 'searchquery',
-          lifespan: '5',
-          parameters: q,
-        }],
-      })
-    },
-  };
-
-  // console.log(action, parameters)
-  // If undefined or unknown action use the default handler
-  if (actionHandlers[action]) {
-    actionHandlers[action]();
-  }
+/*
+* Function to handle v2 webhook requests from Dialogflow
+*/
+async function processV2Request (request, response) {
+  // An action is a string used to identify what needs to be done in fulfillment
+  let action = (request.body.queryResult.action) ? request.body.queryResult.action : 'default';
+  // Parameters are any entites that Dialogflow has extracted from the request.
+  let parameters = request.body.queryResult.parameters || {}; // https://dialogflow.com/docs/actions-and-parameters
+  // Contexts are objects used to track and store conversation state
+  let inputContexts = request.body.queryResult.contexts; // https://dialogflow.com/docs/contexts
+  // Get the request source (Google Assistant, Slack, API, etc)
+  let requestSource = (request.body.originalDetectIntentRequest) ? request.body.originalDetectIntentRequest.source : undefined;
+  // Get the session ID to differentiate calls from different users
+  let session = (request.body.session) ? request.body.session : undefined;
 
   // Run the proper handler function to handle the request from Dialogflow
+  const answer = new Answer({action, parameters, inputContexts, requestSource, session})
+  sendResponse(await answer.toResponse());
+  
 
   // Function to send correctly formatted responses to Dialogflow which are then sent to the user
   function sendResponse (responseToUser) {
+  	console.log(responseToUser)
     // if the response is a string send it as a response to the user
     if (typeof responseToUser === 'string') {
-      let responseJson = {};
-      responseJson.speech = responseToUser; // spoken response
-      responseJson.displayText = responseToUser; // displayed response
-      // responseJson.data = {
-      //   telegram: {
-      //     parse_mode: 'HTML'
-      //   }
-      // };
+      let responseJson = {fulfillmentText: responseToUser}; // displayed response
       response.json(responseJson); // Send response to Dialogflow
     } else {
       // If the response to the user includes rich responses or contexts send them to Dialogflow
       let responseJson = {};
-      // If speech or displayText is defined, use it to respond (if one isn't defined use the other's value)
-      responseJson.speech = responseToUser.speech || responseToUser.displayText;
-      responseJson.displayText = responseToUser.displayText || responseToUser.speech;
+
+      // Define the text response
+      responseJson.fulfillmentText = responseToUser.fulfillmentText;
       // Optional: add rich messages for integrations (https://dialogflow.com/docs/rich-messages)
-      responseJson.data = responseToUser.data
-
+      if (responseToUser.fulfillmentMessages) {
+        responseJson.fulfillmentMessages = responseToUser.fulfillmentMessages;
+      }
       // Optional: add contexts (https://dialogflow.com/docs/contexts)
-      responseJson.contextOut = responseToUser.contextOut;
+      if (responseToUser.outputContexts) {
+        responseJson.outputContexts = responseToUser.outputContexts;
+      }
 
-      
-      response.json(responseJson); // Send response to Dialogflow
+      // Send the response to Dialogflow
+      console.log('Response to Dialogflow: ' + JSON.stringify(responseJson));
+      response.json(responseJson);
     }
-  }
-
-  async function getAnimes(params) {
-    	const API = await shikimori
-  		const resp = await API.get('/animes', { params })
-      return Promise.all(resp.data.map(a => API.get('/animes/' + a.id).then(resp => resp.data)))
   }
 }

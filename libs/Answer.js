@@ -17,8 +17,10 @@ const shikimori = require('./shikimori').getShikimoriApi({
 class Answer {
 
 	constructor ({action, parameters, inputContexts, requestSource, session}) {
+		console.log()
 		this.action = action
 		this.parameters = parameters
+		this.requestSource = requestSource || 'default'
 	}
 
 	async toResponse () {
@@ -84,12 +86,17 @@ class Answer {
 	static getFulfillmentMessages(query, result = []) {
 		const messeges = []
 
-		const names = result.map(a => a.name)
+		const names = result.map(a => this.[`_getSingleItem_${this.requestSource}`](a))
 
 		console.log(...names)
 
 		messeges.push({
 			platform: 'PLATFORM_UNSPECIFIED',
+			text: {text: [`Вот что есть:\n${names.join(';\n')}`]}
+		})
+
+		messeges.push({
+			platform: 'TELEGRAM',
 			text: {text: [`Вот что есть:\n${names.join(';\n')}`]}
 		})
 		// if (!result.length) {
@@ -146,12 +153,19 @@ class Answer {
 	// 		.replace('{{list}}', this._getListItems(result))
 	// 		.replace('{{name}}', this._getSingleItem(result[0]))
 	// }
+	// 
+	// 
+	_getSingleItem_default(item, addScore = true) {
+		if (!item)
+			return ''
+		return `${item.russian || item.name}`+ (addScore ? ` (${item.score}/10)` : '')
+	}
 
-	// static _getSingleItem(item, addScore = true) {
-	// 	if (!item)
-	// 		return ''
-	// 	return `<a href="${item.shortUrl || 'https://shikimori.org'+item.url}">${item.russian || item.name}</a>`+ (addScore ? ` (${item.score}/10)` : '')
-	// }
+	_getSingleItem_telegram(item, addScore = true) {
+		if (!item)
+			return ''
+		return `<a href="${item.shortUrl || 'https://shikimori.org'+item.url}">${item.russian || item.name}</a>`+ (addScore ? ` (${item.score}/10)` : '')
+	}
 	// static _getListItems(items) {
 	// 	return items.map(i => ` • ${this._getSingleItem(i)};`).join('\n')
 	// }

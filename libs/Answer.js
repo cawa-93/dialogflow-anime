@@ -89,8 +89,8 @@ class Answer {
 		console.log(...names)
 
 		messeges.push({
-			platform: 'PLATFORM_UNSPECIFIED',
-			text: ['Вот что есть:', ...names]
+			// platform: 'PLATFORM_UNSPECIFIED',
+			text: {text:['Вот что есть:', ...names]}
 		})
 		// if (!result.length) {
 		// 	return {

@@ -7,7 +7,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.post('/webHook', function (request, response) {
-  // console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
+  console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
   if (request.body.queryResult) {
     processV2Request(request, response);

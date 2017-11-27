@@ -17,10 +17,10 @@ const shikimori = require('./shikimori').getShikimoriApi({
 class Answer {
 
 	constructor ({action, parameters, inputContexts, requestSource, session}) {
-		console.log()
 		this.action = action
 		this.parameters = parameters
 		this.requestSource = requestSource || 'default'
+		console.log(this.requestSource)
 	}
 
 	async toResponse () {
@@ -37,7 +37,7 @@ class Answer {
 		const query = new SearchQuery(this.parameters)
 		const animes = await Answer.getAnimes(query.toApi())
 		return {
-			fulfillmentMessages: Answer.getFulfillmentMessages(query, animes),
+			fulfillmentMessages: this.getFulfillmentMessages(query, animes),
 			source: 'shikimori.org'
 		}
 	}
@@ -83,7 +83,7 @@ class Answer {
 	 * @param  {Array}  result Массив аниме
 	 * @return {Object}        Объект с данными для сообщения
 	 */
-	static getFulfillmentMessages(query, result = []) {
+	getFulfillmentMessages(query, result = []) {
 		const messeges = []
 
 		const names = result.map(a => this[`_getSingleItem_${this.requestSource}`](a))

@@ -1,5 +1,5 @@
 module.exports = {
-	wait: require('./wait.js'),
+	// wait: require('./wait.js'),
 	single: require('./single.js'),
 	list: require('./list.js'),
 	notFound: require('./notFound.js'),

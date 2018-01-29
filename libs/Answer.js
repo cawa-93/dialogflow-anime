@@ -3,24 +3,22 @@ const {getRandomItem} = require('./utils.js')
 const phrases = require('./database/phrases')
 const qs = require('qs')
 const SearchQuery = require('./SearchQuery')
-const shikimori = require('./shikimori').getShikimoriApi({
-	nickname: process.env.NICKNAME,
-	password: process.env.PASSWORD,
-})
-.catch(resp => {
-	console.error('shikimori authorization failed')
-	console.error(resp.data)
-})
+const shikimori = require('./shikimori')
 /**
  * @class
  */
 class Answer {
 
-	constructor ({action, parameters, inputContexts, requestSource, session}) {
+	constructor ({action, parameters, inputContexts, request, session}) {
 		this.action = action
 		this.parameters = parameters
-		this.requestSource = requestSource || 'default'
-		console.log(this.requestSource)
+		this.request = request
+		if (!this.request) {
+			this.request = {}
+		}
+		if (!this.request.source) {
+			this.request.source = 'default'
+		}
 	}
 
 	async toResponse () {
@@ -36,46 +34,18 @@ class Answer {
 	async action_SearchQuery() {
 		const query = new SearchQuery(this.parameters)
 		const animes = await Answer.getAnimes(query.toApi())
+		console.log(query.toApi())
+		console.log(animes)
 		return {
 			fulfillmentMessages: this.getFulfillmentMessages(query, animes),
-			source: 'shikimori.org'
+			source: 'shikimori.org',
 		}
 	}
 
 	static async getAnimes (params) {
-    	const API = await shikimori
-  		const resp = await API.get('/animes', { params })
-      return Promise.all(resp.data.map(a => API.get('/animes/' + a.id).then(resp => resp.data)))
+  		const resp = await shikimori.get('/animes', { params })
+      return Promise.all(resp.data.map(a => shikimori.get('/animes/' + a.id).then(resp => resp.data)))
   }
-	/**
-	 * Возвращяет случайный стикер
-	 * @param  {string} type Категория набора стикеров
-	 * @return {string}      ID стикера
-	 */
-	// static getRandomSticker(type) {
-	// 	return getRandomItem(phrases.stickers[type])
-	// }
-
-	// static getWaitText() {
-	// 	return {
-	// 		text: getRandomItem(phrases.wait).text,
-	// 	}
-	// }
-
-	// static getStartMess() {
-	// 	return {
-	// 		text: '<b>Примеры запросов:</b>\n<i>Сериал в жанре комедия;\n5 фильмов ужасов;\nтоп 10 комедий;\n5 Аниме похожих на "Наруто";\nТоп ужасов 2017;\nКомедии 18+;</i>',
-	// 		params: this.getMessParams(),
-	// 	}
-	// }
-
-	// static getErrorText(e) {
-	// 	return {
-	// 		sticker: this.getRandomSticker('error'),
-	// 		text: `<b>Кажется в процессе что-то сломалось.</b>\nСообщите о проблеме @kozack:\n<pre>${e.stack.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;').replace(/"/g, '&quot;')}</pre>.`,
-	// 		params: this.getMessParams(),
-	// 	}
-	// }
 
 	/**
 	 * Возвращает текст ответа
@@ -86,19 +56,27 @@ class Answer {
 	getFulfillmentMessages(query, result = []) {
 		const messeges = []
 
-		const names = result.map(a => this[`_getSingleItem_${this.requestSource}`](a))
-
-		console.log(...names)
+		const rows = result.map(a => this._getSingleItem(a))
 
 		messeges.push({
 			platform: 'PLATFORM_UNSPECIFIED',
-			text: {text: [`Вот что есть:\n${names.join(';\n')}`]}
+			text: {text: [`Вот что есть:`, 'Вот что нашла:', 'Вот что могу посоветовать:']}
 		})
 
 		messeges.push({
-			platform: 'TELEGRAM',
-			text: {text: [`Вот что есть:\n${names.join(';\n')}`]}
+			platform: 'PLATFORM_UNSPECIFIED',
+			text: {text: [rows.join(';\n')]}
 		})
+
+		// messeges.push({
+		// 	platform: 'TELEGRAM',
+		// 	payload: {
+		// 	  "telegram": {
+		// 	    "text": names.join(';\n'),
+		// 	    "parse_mode": "HTML"
+		// 	  }
+		// 	}
+		// })
 		// if (!result.length) {
 		// 	return {
 		// 		sticker: this.getRandomSticker('notFound'),
@@ -155,17 +133,12 @@ class Answer {
 	// }
 	// 
 	// 
-	_getSingleItem_default(item, addScore = true) {
+	_getSingleItem(item, addScore = true) {
 		if (!item)
 			return ''
-		return `${item.russian || item.name}`+ (addScore ? ` (${item.score}/10)` : '')
+		return `${item.russian || item.name}${(addScore ? ` (${item.score}/10)` : '')} ${item.shortUrl || 'https://shikimori.org'+item.url}`
 	}
 
-	_getSingleItem_telegram(item, addScore = true) {
-		if (!item)
-			return ''
-		return `<a href="${item.shortUrl || 'https://shikimori.org'+item.url}">${item.russian || item.name}</a>`+ (addScore ? ` (${item.score}/10)` : '')
-	}
 	// static _getListItems(items) {
 	// 	return items.map(i => ` • ${this._getSingleItem(i)};`).join('\n')
 	// }

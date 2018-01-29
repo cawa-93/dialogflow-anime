@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon --watch libs --watch .env --watch index.js --exec heroku local"
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,8 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "joi": "^13.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
   }
 }

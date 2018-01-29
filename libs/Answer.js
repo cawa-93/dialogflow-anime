@@ -101,7 +101,7 @@ class Answer {
 		return {
 			title: (item.russian || item.name) + (item.score ? ` (${item.score}/10)` : ''),
 			// subtitle: item.russian ? item.name : undefined,
-			subtitle: item.description ? item.description : undefined,
+			subtitle: item.description ? `${item.description.replace(/\[[^]+\]/gi, '')}\n\n${item.shortUrl || 'https://shikimori.org'+item.url}` : undefined,
 			imageUri: item.image ? `https://shikimori.org${item.image.preview}` : undefined
 		}
 	}

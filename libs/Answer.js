@@ -34,8 +34,6 @@ class Answer {
 	async action_SearchQuery() {
 		const query = new SearchQuery(this.parameters)
 		const animes = await Answer.getAnimes(query.toApi())
-		console.log(query.toApi())
-		console.log(animes)
 		return {
 			fulfillmentMessages: this.getFulfillmentMessages(query, animes),
 			source: 'shikimori.org',
@@ -54,19 +52,15 @@ class Answer {
 	 * @return {Object}        Объект с данными для сообщения
 	 */
 	getFulfillmentMessages(query, result = []) {
-		const messeges = []
-
-		const rows = result.map(a => this._getSingleItem(a))
-
-		messeges.push({
+		const messeges = [{
 			platform: 'PLATFORM_UNSPECIFIED',
-			text: {text: [`Вот что есть:`, 'Вот что нашла:', 'Вот что могу посоветовать:']}
-		})
+			text: {text: [`Думаю это подойдёт`]}
+		}]
 
-		messeges.push({
+		messeges.push(...result.map(a => ({
 			platform: 'PLATFORM_UNSPECIFIED',
-			text: {text: [rows.join(';\n')]}
-		})
+			basicCard: this._getSingleItem(a)
+		})))
 
 		// messeges.push({
 		// 	platform: 'TELEGRAM',
@@ -134,9 +128,17 @@ class Answer {
 	// 
 	// 
 	_getSingleItem(item, addScore = true) {
-		if (!item)
-			return ''
-		return `${item.russian || item.name}${(addScore ? ` (${item.score}/10)` : '')} ${item.shortUrl || 'https://shikimori.org'+item.url}`
+		// if (!item)
+			// return ''
+		// return `${item.russian || item.name}${(addScore ? ` (${item.score}/10)` : '')} ${item.shortUrl || 'https://shikimori.org'+item.url}`
+		return {
+			title: (item.russian || item.name) + (item.score ? ` (${item.score}/10)` : ''),
+			subtitle: item.russian ? item.name : undefined,
+			formattedText: item.description ? item.description : undefined,
+			image:{
+				imageUri: item.image ? `https://shikimori.org${item.image.preview}` : undefined
+			}
+		}
 	}
 
 	// static _getListItems(items) {

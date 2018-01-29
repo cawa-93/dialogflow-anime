@@ -37,7 +37,7 @@ class SearchQuery {
 		Object.keys(this).forEach(k => {
 			if (this[k] == null)
 				return
-			if (k === 'genre' || k === 'type') {
+			if (k === 'genres' || k === 'types') {
 				result.genre = this[k].map(r => database[k][r]).join(',')
 			} else {
 				result[k] = Array.isArray(this[k]) ? this[k].join(',') : this[k]

@@ -34,6 +34,7 @@ class Answer {
 	async action_SearchQuery() {
 		const query = new SearchQuery(this.parameters)
 		const animes = await Answer.getAnimes(query.toApi())
+  		console.log(query.toApi())
 		return {
 			fulfillmentMessages: this.getFulfillmentMessages(query, animes),
 			source: 'shikimori.org',
@@ -42,6 +43,9 @@ class Answer {
 
 	static async getAnimes (params) {
   		const resp = await shikimori.get('/animes', { params })
+  		// console.log(params)
+  		// console.log('\n\n')
+  		// console.log(resp.data)
       return Promise.all(resp.data.map(a => shikimori.get('/animes/' + a.id).then(resp => resp.data)))
   }
 

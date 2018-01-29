@@ -52,50 +52,17 @@ class Answer {
 	 * @return {Object}        Объект с данными для сообщения
 	 */
 	getFulfillmentMessages(query, result = []) {
-		const messeges = [{
-			platform: 'PLATFORM_UNSPECIFIED',
-			text: {text: [`Думаю это подойдёт`]}
-		}]
+		return [
+			{
+				platform: 'PLATFORM_UNSPECIFIED',
+				text: {text: [`Думаю это подойдёт`]}
+			},
+			...result.map(a => ({
+				platform: 'PLATFORM_UNSPECIFIED',
+				card: this._getSingleItem(a)
+			}))
+		]
 
-		messeges.push(...result.map(a => ({
-			platform: 'PLATFORM_UNSPECIFIED',
-			basicCard: this._getSingleItem(a)
-		})))
-
-		// messeges.push({
-		// 	platform: 'TELEGRAM',
-		// 	payload: {
-		// 	  "telegram": {
-		// 	    "text": names.join(';\n'),
-		// 	    "parse_mode": "HTML"
-		// 	  }
-		// 	}
-		// })
-		// if (!result.length) {
-		// 	return {
-		// 		sticker: this.getRandomSticker('notFound'),
-		// 		text: getRandomItem(phrases.notFound).text,
-		// 	}
-		// }
-
-		// const allowed = phrases[result.length > 1 ? 'list' : 'single'].filter(phrase => {
-		// 	if (!phrase.rule)
-		// 		return true
-		// 	return phrase.rule.validate(query, {
-		// 		abortEarly: true,
-		// 		allowUnknown: true,
-		// 	}).error === null
-		// })
-
-		// let template = getRandomItem(allowed).text
-
-		// // let callback_data = query.toApi()
-
-		// const answer = {
-		// 	text: this._parseAnswer(template, result, query),
-		// 	// params: this.getMessParams(qs.stringify(callback_data)),
-		// }
-		return messeges
 	}
 
 	// static getMessParams(callback_data) {
@@ -133,11 +100,9 @@ class Answer {
 		// return `${item.russian || item.name}${(addScore ? ` (${item.score}/10)` : '')} ${item.shortUrl || 'https://shikimori.org'+item.url}`
 		return {
 			title: (item.russian || item.name) + (item.score ? ` (${item.score}/10)` : ''),
-			subtitle: item.russian ? item.name : undefined,
-			formattedText: item.description ? item.description : undefined,
-			image:{
-				imageUri: item.image ? `https://shikimori.org${item.image.preview}` : undefined
-			}
+			// subtitle: item.russian ? item.name : undefined,
+			subtitle: item.description ? item.description : undefined,
+			imageUri: item.image ? `https://shikimori.org${item.image.preview}` : undefined
 		}
 	}
 

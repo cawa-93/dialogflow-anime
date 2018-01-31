@@ -21,9 +21,9 @@
     "axios": "^0.17.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
-    "joi": "^13.0.2"
+    "joi": "^13.1.1"
   },
   "devDependencies": {
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.14.11"
   }
 }

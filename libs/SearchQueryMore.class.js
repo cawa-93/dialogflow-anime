@@ -3,19 +3,18 @@ const database = require('./database')
 
 class SearchQueryMore extends SearchQuery {
 	async toJson(defaultParams) {
+
+
 		if (!this.parameters.page) {
 			this.parameters.page = 1
 		}
 
 		++this.parameters.page
 
-		this.outputContexts = [{
-			name: 'SearchQuery',
-			lifespanCount: 5,
-			parameters: {
-				page: this.parameters.page
-			}
-		}]
+		const context = this.outputContexts.find(c => /searchquery$/.test(c.name))
+		if (context && context.parameters) {
+			context.parameters.page = parseInt(context.parameters.page || 1) + 1
+		}
 
 		return await super.toJson()
 	}

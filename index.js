@@ -32,14 +32,16 @@ app.listen(process.env.PORT, () => console.log('WebHook server listening on port
 async function processV2Request (request, response) {
   try {
 
+    console.log()
+
     let action = (request.body.queryResult.action) ? request.body.queryResult.action : 'default'
     let parameters = request.body.queryResult.parameters || {} // https://dialogflow.com/docs/actions-and-parameters
-    let inputContexts = request.body.queryResult.contexts // https://dialogflow.com/docs/contexts
+    let outputContexts = request.body.queryResult.outputContexts // https://dialogflow.com/docs/contexts
     let requestSource = (request.body.originalDetectIntentRequest) ? request.body.originalDetectIntentRequest.payload : {}
     let session = (request.body.session) ? request.body.session : undefined
 
     if (actions[action]) {
-      const answer = new actions[action] ({parameters, inputContexts, requestSource, session})
+      const answer = new actions[action] ({parameters, outputContexts, requestSource, session})
       response.json(await answer.toJson())
     }
   } catch (e) {

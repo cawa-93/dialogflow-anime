@@ -39,10 +39,54 @@ class Answer {
 			source: 'shikimori.org',
 		}
 	}
+	async action_SearchByName() {
+		const animes = await Answer.getAnimes({
+			search: this.parameters.name,
+			limit: 1,
+		})
+		const messages = []
+		if (animes.length) {
+			messages.push({
+				platform: 'PLATFORM_UNSPECIFIED',
+				card: this._getSingleItem(animes[0])
+			})
+
+			const similar = await Answer.getSimilar(animes[0].id, 3)
+			if (similar.length) {
+				messages.push(
+					{
+						platform: 'PLATFORM_UNSPECIFIED',
+						text: {text: ['Вот похожие аниме:']}
+					},
+					...similar.map(a => ({
+						platform: 'PLATFORM_UNSPECIFIED',
+						card: this._getSingleItem(a)
+					}))
+				)
+			}
+
+		} else {
+			messages.push({
+				platform: 'PLATFORM_UNSPECIFIED',
+				text: {text: ['Я не знаю такого аниме']}
+			})
+		}
+
+		return {
+			fulfillmentMessages: messages,
+			source: 'shikimori.org',
+		}
+	}
 
 	static async getAnimes (params) {
 		const resp = await shikimori.get('/animes', { params })
     return Promise.all(resp.data.map(a => shikimori.get('/animes/' + a.id).then(resp => resp.data)))
+  }
+
+
+	static async getSimilar (id, limit) {
+		const {data} = await shikimori.get(`/animes/${id}/similar`)
+    return Promise.all(data.slice(0,limit).map(a => shikimori.get('/animes/' + a.id).then(resp => resp.data)))
   }
 
 	/**

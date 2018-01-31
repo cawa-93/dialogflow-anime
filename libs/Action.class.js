@@ -39,6 +39,7 @@ class Action {
 		if (data.description_html) {
 			data.description = data.description_html.split('</div>')[0].replace(/<[^>]+>/g, '') + '...'
 		}
+		return data
 	}
 
 	getCard(anime) {

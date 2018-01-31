@@ -64,12 +64,6 @@ class Answer {
 					}))
 				)
 			}
-
-		} else {
-			messages.push({
-				platform: 'PLATFORM_UNSPECIFIED',
-				text: {text: ['Я не знаю такого аниме']}
-			})
 		}
 
 		return {

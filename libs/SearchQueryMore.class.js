@@ -9,13 +9,13 @@ class SearchQueryMore extends SearchQuery {
 
 		++this.parameters.page
 
-		this.outputContexts = {
+		this.outputContexts = [{
 			name: 'SearchQuery',
 			lifespanCount: 5,
 			parameters: {
 				page: this.parameters.page
 			}
-		}
+		}]
 
 		return await super.toJson()
 	}

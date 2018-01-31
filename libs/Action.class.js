@@ -35,13 +35,16 @@ class Action {
 	}
 
 	async getSingleAnime(id) {
-		return (await shikimori.get(`/animes/${id}`)).data
+		const {data} = await shikimori.get(`/animes/${id}`)
+		if (data.description_html) {
+			data.description = data.description_html.split('</div>')[0].replace(/<[^>]+>/g, '') + '...'
+		}
 	}
 
 	getCard(anime) {
 		return {
 			title: (anime.russian || anime.name) + (anime.score ? ` (${anime.score}/10)` : ''),
-			subtitle: anime.description ? anime.description.replace(/\[[^]+\]/gi, '') : undefined,
+			subtitle: anime.description ? anime.description : undefined,
 			imageUri: anime.image ? `https://shikimori.org${anime.image.original}` : undefined,
 			buttons: [{
 			  "text": 'Смотреть',

@@ -9,30 +9,52 @@ class SearchByName extends Action {
 			params.search = this.parameters.name
 		}
 
-		const anime = (await this.getAnimes(params))[0]
+		params.limit = 10
 
-		if (!anime) {
+		let animes = (await this.getAnimes(params, undefined, false))
+		if (!animes) {
 			return await super.toJson()
 		}
+
+		let anime = animes.find(a => (a.name == params.search || a.russian == params.search))
+
+		if (!anime) {
+			anime = animes[0]
+		}
+
+		anime = await this.getSingleAnime(anime.id)
+
 		this.pushMessage({
 			card: this.getCard(anime)
 		})
 
-		const similar = await this.getAnimes({limit: 3}, `/animes/${anime.id}/similar`)
 
-		if (!similar || !similar.length) {
-			return await super.toJson()
+		/**
+		 * Load 3 anime to answer
+		 */
+		let text = ''
+		animes = await this.getAnimes({limit: 3}, `/animes/${anime.id}/similar`)
+
+		if (animes && animes.length) {
+			text = 'Вот несколько похожих аниме:'
+		} else {
+			animes = await this.getAnimes({limit: 3}, `/animes/${anime.id}/related `)
+			if (animes && animes.length) {
+				text = 'Связанные аниме:'
+			}
 		}
 
-		this.pushMessage({
-			text: {text: ['Вот несколько похожих аниме:']}
-		})
-
-		similar.forEach(anime => {
+		if (text) {
 			this.pushMessage({
-				card: this.getCard(anime)
+				text: {text: [text]}
 			})
-		})
+
+			animes.forEach(anime => {
+				this.pushMessage({
+					card: this.getCard(anime)
+				})
+			})
+		}
 
 		return await super.toJson()
 	}

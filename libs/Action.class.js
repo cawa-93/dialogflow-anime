@@ -24,13 +24,20 @@ class Action {
 		return json
 	}
 
-	async getAnimes(params, url = '/animes') {
-		const {data} = await shikimori.get(url, { params })
+	async getAnimes(params, url = '/animes', extend = true) {
 		if (!params.limit) {
 			params.limit = 3
 		}
+		
+		let {data: animes} = await shikimori.get(url, { params })
+		animes = animes.slice(0, params.limit)
+		
+		if (!extend) {
+			return animes
+		}
+
     return Promise.all(
-    	data.slice(0, params.limit).map(a => this.getSingleAnime(a.id))
+    	animes.map(a => this.getSingleAnime(a.id))
   	)
 	}
 

@@ -3,8 +3,6 @@ const database = require('./database')
 
 class SearchQueryMore extends SearchQuery {
 	async toJson(defaultParams) {
-
-
 		if (!this.parameters.page) {
 			this.parameters.page = 1
 		}

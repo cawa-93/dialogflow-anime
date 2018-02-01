@@ -25,6 +25,12 @@ class SearchQuery extends Action {
 			params.page = this.parameters.page
 		}
 
+		if (this.parameters.status) {
+			params.status = this.parameters.status
+		} else {
+			params.status = 'ongoing,released'
+		}
+
 		// if (this.parameters.period) {
 		// 	params.period  = this.parameters.period
 		// }

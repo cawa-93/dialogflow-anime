@@ -1,4 +1,4 @@
-const express = require(`express`) // Cloud Functions for Firebase library
+const express = require(`express`)
 const bodyParser = require(`body-parser`)
 
 const actions = {

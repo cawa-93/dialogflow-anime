@@ -2,13 +2,15 @@
   "name": "dialogflow-anime",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "node ./src/index.js",
     "dev": "heroku local:run nodemon --watch src --exec node ./src/index.js",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix"
   },
+  "precommit": "lint",
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cawa-93/dialogflow-anime.git"
@@ -27,6 +29,7 @@
   },
   "devDependencies": {
     "eslint": "^4.17.0",
-    "nodemon": "^1.14.11"
+    "nodemon": "^1.14.11",
+    "pre-commit": "^1.2.2"
   }
 }

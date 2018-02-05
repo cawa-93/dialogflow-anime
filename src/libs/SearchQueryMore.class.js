@@ -1,8 +1,7 @@
-const SearchQuery = require('./SearchQuery.class.js')
-const database = require('./database')
+const SearchQuery = require(`./SearchQuery.class.js`)
 
 class SearchQueryMore extends SearchQuery {
-	async toJson(defaultParams) {
+	async toJson() {
 		if (!this.parameters.page) {
 			this.parameters.page = 1
 		}

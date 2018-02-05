@@ -11,12 +11,12 @@
  */
 module.exports = [
 	{
-		'id':'ranked',
-		'russian':'Лучших',
-		'trigger': ['\\b(топ|популяр|лучш|самы|крут)'],
+		id     : `ranked`,
+		russian: `Лучших`,
+		trigger: [`\\b(топ|популяр|лучш|самы|крут)`],
 	}, {
-		'id':'random',
-		'russian':'Случайных',
-		'trigger': ['\\b(случай|любые)'],
+		id     : `random`,
+		russian: `Случайных`,
+		trigger: [`\\b(случай|любые)`],
 	},
 ]

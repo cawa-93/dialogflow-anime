@@ -1,9 +1,9 @@
 /** @module */
 
-const genres = require('./genres')
-const types = require('./types')
-const orders = require('./orders')
-const ratings = require('./ratings')
+const genres = require(`./genres`)
+const types = require(`./types`)
+const orders = require(`./orders`)
+const ratings = require(`./ratings`)
 
 /**
  * База всех статических данных

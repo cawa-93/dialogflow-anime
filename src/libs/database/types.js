@@ -10,9 +10,9 @@
  * @type {Type[]}
  */
 module.exports = {
-	'Сериал': 'tv',
-	'Фильм': 'movie',
-	'OVA': 'ova',
-	'ONA': 'ona',
-	'Спец. выпуск': 'special',
+	Сериал        : `tv`,
+	Фильм         : `movie`,
+	OVA           : `ova`,
+	ONA           : `ona`,
+	'Спец. выпуск': `special`,
 }

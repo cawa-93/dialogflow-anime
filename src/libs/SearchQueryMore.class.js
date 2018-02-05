@@ -10,7 +10,7 @@ class SearchQueryMore extends SearchQuery {
 
 		const context = this.outputContexts.find(c => /searchquery$/.test(c.name))
 		if (context && context.parameters) {
-			context.parameters.page = parseInt(context.parameters.page || 1) + 1
+			context.parameters.page = this.parameters.page
 		}
 
 		return await super.toJson()

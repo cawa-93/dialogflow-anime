@@ -1,16 +1,18 @@
 const Action = require(`./Action.class.js`)
-const database = require(`./database`)
+const {genres, types} = require(`./database`)
 
 class SearchQuery extends Action {
 	async toJson() {
+		// params for api
+		// @see https://shikimori.org/api/doc/1.0/animes/index
 		const params = {}
 
 		if (this.parameters.genres) {
-			params.genre = this.parameters.genres.map(genre => database.genres[genre]).join(`,`)
+			params.genre = this.parameters.genres.map(genre => genres[genre]).join(`,`)
 		}
 
 		if (this.parameters.types) {
-			params.kind = database.types[this.parameters.types]
+			params.kind = types[this.parameters.types]
 		}
 
 		if (this.parameters.order) {
@@ -23,6 +25,10 @@ class SearchQuery extends Action {
 
 		if (this.parameters.page) {
 			params.page = this.parameters.page
+		}
+
+		if (this.parameters.rating) {
+			params.rating = this.parameters.rating
 		}
 
 		if (this.parameters.status) {

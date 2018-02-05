@@ -6,28 +6,18 @@ class SearchByName extends Action {
 		const params = {}
 
 		if (this.parameters.name) {
-			params.search = this.parameters.name
+			params.search = this.parameters.name.toLowerCase()
+			params.limit = 1
 		}
 
-		params.limit = 10
-
-		let animes = (await this.getAnimes(params, undefined, false))
-		if (!animes) {
+		let anime = (await this.getAnimes(params))[0]
+		if (!anime) {
 			return await super.toJson()
 		}
-
-		let anime = animes.find(a => (a.name == params.search || a.russian == params.search))
-
-		if (!anime) {
-			anime = animes[0]
-		}
-
-		anime = await this.getSingleAnime(anime.id)
 
 		this.pushMessage({
 			card: this.getCard(anime)
 		})
-
 
 		/**
 		 * Load 3 anime to answer

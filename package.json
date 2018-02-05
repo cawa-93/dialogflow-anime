@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon --watch libs --watch .env --watch index.js --exec heroku local"
+    "start": "node src/index.js",
+    "dev": "heroku local:run nodemon --watch src --exec node src/index.js"
   },
   "repository": {
     "type": "git",

@@ -23,7 +23,7 @@ class SearchByName extends Action {
 		 * Load 3 anime to answer
 		 */
 		let text = ''
-		animes = await this.getAnimes({limit: 3}, `/animes/${anime.id}/similar`)
+		let animes = await this.getAnimes({limit: 3}, `/animes/${anime.id}/similar`)
 
 		if (animes && animes.length) {
 			text = 'Вот несколько похожих аниме:'

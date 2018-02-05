@@ -12,21 +12,23 @@ const actions = {
 */
 async function processV2Request (request, response) {
 	try {
-		const action = (request.body.queryResult.action) ? request.body.queryResult.action : `default`
-		const parameters = request.body.queryResult.parameters || {} // https://dialogflow.com/docs/actions-and-parameters
-		const outputContexts = request.body.queryResult.outputContexts // https://dialogflow.com/docs/contexts
+		const action = (request.body.queryResult.action) ? request.body.queryResult.action : undefined
+		const parameters = request.body.queryResult.parameters || {}
+		const outputContexts = request.body.queryResult.outputContexts
 		const requestSource = (request.body.originalDetectIntentRequest) ? request.body.originalDetectIntentRequest.payload : {}
 		const session = (request.body.session) ? request.body.session : undefined
 
 		if (actions[action]) {
 			const answer = new actions[action] ({parameters, outputContexts, requestSource, session})
 			response.json(await answer.toJson())
+		} else {
+			throw new Error(`Undefined action ${action}`)
 		}
 	} catch (e) {
 		// eslint-disable-next-line no-console
 		console.log(e)
 		response.json({
-			fulfillmentText: `Упс... Кажется что-то сломалось. Сообщите разработчику: kozackunisoft@gmail.com\n\n`+e.stack,
+			fulfillmentText: `Упс... Кажется что-то сломалось. Сообщите разработчику: kozackunisoft@gmail.com\n\n${e.stack}`,
 		})
 	}
 }

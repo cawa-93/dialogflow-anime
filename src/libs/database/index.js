@@ -1,7 +1,7 @@
 const genres = require(`./genres`)
-const types = require(`./types`)
+const kinds = require(`./kinds`)
 
 module.exports = {
 	genres,
-	types,
+	kinds,
 }

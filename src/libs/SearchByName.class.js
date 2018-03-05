@@ -3,9 +3,10 @@ const Action = require(`./Action.class.js`)
 class SearchByName extends Action {
 	async toJson() {
 		const params = {}
+		const context = this.getContext(`SearchQuery`)
 
-		if (this.parameters.name) {
-			params.search = this.parameters.name.toLowerCase()
+		if (context.parameters.name) {
+			params.search = context.parameters.name.toLowerCase()
 			params.limit = 1
 		}
 
@@ -27,7 +28,10 @@ class SearchByName extends Action {
 		if (animes && animes.length) {
 			text = `Вот несколько похожих аниме:`
 		} else {
-			animes = await this.getAnimes({limit: 3}, `/animes/${anime.id}/related `)
+			const relateds = await this.getAnimes({limit: 3}, `/animes/${anime.id}/related`, false)
+			animes = await Promise.all(
+				relateds.filter(r => Boolean(r.anime)).map(r => this.getSingleAnime(r.anime.id))
+			)
 			if (animes && animes.length) {
 				text = `Связанные аниме:`
 			}

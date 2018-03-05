@@ -6,33 +6,34 @@ class SearchQuery extends Action {
 		// params for api
 		// @see https://shikimori.org/api/doc/1.0/animes/index
 		const params = {}
+		const context = this.getContext(`SearchQuery`)
 
-		if (this.parameters.genre) {
-			params.genre = this.parameters.genre.map(g => genres[g]).join(`,`)
+		if (context.parameters.genre) {
+			params.genre = context.parameters.genre.map(g => genres[g]).join(`,`)
 		}
 
-		if (this.parameters.kind) {
-			params.kind = this.parameters.kind.map(k => kinds[k]).join(`,`)
+		if (context.parameters.kind) {
+			params.kind = context.parameters.kind.map(k => kinds[k]).join(`,`)
 		}
 
-		if (this.parameters.rating) {
-			params.rating = this.parameters.rating.join(`,`)
+		if (context.parameters.rating) {
+			params.rating = context.parameters.rating.join(`,`)
 		}
 
-		if (this.parameters.order) {
-			params.order = this.parameters.order
+		if (context.parameters.order) {
+			params.order = context.parameters.order
 		}
 
-		if (this.parameters.limit) {
-			params.limit = this.parameters.limit
+		if (context.parameters.limit) {
+			params.limit = context.parameters.limit
 		}
 
-		if (this.parameters.page) {
-			params.page = this.parameters.page
+		if (context.parameters.page) {
+			params.page = context.parameters.page
 		}
 
-		if (this.parameters.status) {
-			params.status = this.parameters.status.join(`,`)
+		if (context.parameters.status) {
+			params.status = context.parameters.status.join(`,`)
 		} else {
 			params.status = `ongoing,released`
 		}

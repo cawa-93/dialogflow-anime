@@ -8,7 +8,7 @@ class SearchQueryMore extends SearchQuery {
 
 		++this.parameters.page
 
-		const context = this.outputContexts.find(c => /searchquery$/.test(c.name))
+		const context = this.getContext(`SearchQuery`)
 		if (context && context.parameters) {
 			context.parameters.page = this.parameters.page
 		}

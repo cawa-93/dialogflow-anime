@@ -8,6 +8,11 @@ class Action {
 		this.session = session
 	}
 
+	getContext(name) {
+		const regExp = new RegExp(`/contexts/${name.toLowerCase()}$`)
+		return this.outputContexts.find(c => regExp.test(c.name))
+	}
+
 	async toJson() {
 		const json = {
 			source: `shikimori.org`,

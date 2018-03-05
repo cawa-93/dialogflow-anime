@@ -2,16 +2,13 @@ const SearchQuery = require(`./SearchQuery.class.js`)
 
 class SearchQueryMore extends SearchQuery {
 	async toJson() {
-		if (!this.parameters.page) {
-			this.parameters.page = 1
-		}
-
-		++this.parameters.page
-
 		const context = this.getContext(`SearchQuery`)
-		if (context && context.parameters) {
-			context.parameters.page = this.parameters.page
+
+		if (!context.parameters.page) {
+			context.parameters.page = 1
 		}
+
+		++context.parameters.page
 
 		return await super.toJson()
 	}

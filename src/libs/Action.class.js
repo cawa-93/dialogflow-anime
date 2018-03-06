@@ -1,7 +1,7 @@
 const shikimori = require(`./shikimori`)
 
 class Action {
-	constructor({parameters, outputContexts, requestSource, session}) {
+	constructor({parameters, outputContexts, requestSource, session} = {}) {
 		this.parameters = parameters
 		this.outputContexts = outputContexts
 		this.requestSource = requestSource

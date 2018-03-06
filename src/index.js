@@ -2,6 +2,7 @@ const express = require(`express`)
 const bodyParser = require(`body-parser`)
 
 const actions = {
+	default        : require(`./libs/Action.class.js`),
 	SearchQuery    : require(`./libs/SearchQuery.class.js`),
 	SearchQueryMore: require(`./libs/SearchQueryMore.class.js`),
 	SearchByName   : require(`./libs/SearchByName.class.js`),
@@ -19,7 +20,7 @@ app.post(`/webHook`, async function (request, response) {
 
 		const action = (request.body.queryResult.action) ? request.body.queryResult.action : undefined
 		if (!actions[action]) {
-			throw new Error(`Undefined action ${action}`)
+			throw new Error(`Action ${action} is not found`)
 		}
 
 		const parameters = request.body.queryResult.parameters || {}
@@ -30,19 +31,31 @@ app.post(`/webHook`, async function (request, response) {
 
 		return response.json(await answer.toJson())
 	} catch (e) {
+		const answer = new actions[`default`]()
+		const messages = []
+
 		if (e.response) {
 			// eslint-disable-next-line no-console
 			console.log(e.response)
-			response.json({
-				fulfillmentText: `Упс... Мне не удалось открыть список аниме\n\n${e.response.status} ${e.response.statusText}\n\n${JSON.stringify(e.response.data)}`,
-			})
+			messages.push(
+				`Упс... Мне не удалось открыть список аниме`,
+				`Спросите ещё раз чуть позже`,
+				`И буду благодарна если вы отправите моему создателю (kozackunisoft@gmail.com) эту информацию:`,
+				`${e.response.status} ${e.response.statusText}\n\n${JSON.stringify(e.response.data)}`
+			)
 		} else {
 			// eslint-disable-next-line no-console
 			console.log(e)
-			response.json({
-				fulfillmentText: `Упс... Кажется что-то сломалось. Сообщите разработчику: kozackunisoft@gmail.com\n\n${e.stack}`,
-			})
+			messages.push(
+				`Ой... Кажется я где-то ошиблась`,
+				`Буду благодарна если вы отправите моему создателю (kozackunisoft@gmail.com) эту информацию:`,
+				`${e.stack}`
+			)
 		}
+
+
+		messages.forEach(m => answer.pushMessage({text: {text: [m]}}))
+		return response.json(await answer.toJson())
 	}
 })
 

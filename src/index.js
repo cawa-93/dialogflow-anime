@@ -30,11 +30,19 @@ app.post(`/webHook`, async function (request, response) {
 
 		return response.json(await answer.toJson())
 	} catch (e) {
-		// eslint-disable-next-line no-console
-		console.log(e)
-		response.json({
-			fulfillmentText: `Упс... Кажется что-то сломалось. Сообщите разработчику: kozackunisoft@gmail.com\n\n${e.stack}`,
-		})
+		if (e.response) {
+			// eslint-disable-next-line no-console
+			console.log(e.response)
+			response.json({
+				fulfillmentText: `Упс... Мне не удалось открыть список аниме\n\n${e.response.status} ${e.response.statusText}\n\n${JSON.stringify(e.response.data)}`,
+			})
+		} else {
+			// eslint-disable-next-line no-console
+			console.log(e)
+			response.json({
+				fulfillmentText: `Упс... Кажется что-то сломалось. Сообщите разработчику: kozackunisoft@gmail.com\n\n${e.stack}`,
+			})
+		}
 	}
 })
 

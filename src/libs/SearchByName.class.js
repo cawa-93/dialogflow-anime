@@ -3,12 +3,20 @@ const Action = require(`./Action.class.js`)
 class SearchByName extends Action {
 	async toJson() {
 		const params = {}
-		const context = this.getContext(`SearchQuery`)
+		let inputParams = {}
 
-		if (context.parameters.name) {
-			params.search = context.parameters.name.toLowerCase()
+		const context = this.getContext(`SearchQuery`)
+		if (context && context.parameters) {
+			inputParams = context.parameters
+		} else {
+			inputParams = this.parameters
+		}
+
+		if (inputParams.name) {
+			params.search = inputParams.name.toLowerCase()
 			params.limit = 1
 		}
+
 
 		const anime = (await this.getAnimes(params))[0]
 		if (!anime) {

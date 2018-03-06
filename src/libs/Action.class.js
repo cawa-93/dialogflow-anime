@@ -9,6 +9,9 @@ class Action {
 	}
 
 	getContext(name) {
+		if (!this.outputContexts) {
+			return undefined
+		}
 		const regExp = new RegExp(`/contexts/${name.toLowerCase()}$`)
 		return this.outputContexts.find(c => regExp.test(c.name))
 	}

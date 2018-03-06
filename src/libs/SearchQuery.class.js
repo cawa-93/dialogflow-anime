@@ -6,40 +6,47 @@ class SearchQuery extends Action {
 		// params for api
 		// @see https://shikimori.org/api/doc/1.0/animes/index
 		const params = {}
+		let inputParams = {}
 		const context = this.getContext(`SearchQuery`)
 
-		if (context.parameters.genre) {
-			params.genre = context.parameters.genre.map(g => genres[g]).join(`,`)
+		if (context && context.parameters) {
+			inputParams = context.parameters
+		} else {
+			inputParams = this.parameters
 		}
 
-		if (context.parameters.kind) {
-			params.kind = context.parameters.kind.map(k => kinds[k]).join(`,`)
+		if (inputParams.genre) {
+			params.genre = inputParams.genre.map(g => genres[g]).join(`,`)
 		}
 
-		if (context.parameters.rating) {
-			params.rating = context.parameters.rating.join(`,`)
+		if (inputParams.kind) {
+			params.kind = inputParams.kind.map(k => kinds[k]).join(`,`)
 		}
 
-		if (context.parameters.order) {
-			params.order = context.parameters.order
+		if (inputParams.rating) {
+			params.rating = inputParams.rating.join(`,`)
 		}
 
-		if (context.parameters.limit) {
-			params.limit = context.parameters.limit
+		if (inputParams.order) {
+			params.order = inputParams.order
 		}
 
-		if (context.parameters.page) {
-			params.page = context.parameters.page
+		if (inputParams.limit) {
+			params.limit = inputParams.limit
 		}
 
-		if (context.parameters.status) {
-			params.status = context.parameters.status.join(`,`)
+		if (inputParams.page) {
+			params.page = inputParams.page
+		}
+
+		if (inputParams.status) {
+			params.status = inputParams.status.join(`,`)
 		} else {
 			params.status = `ongoing,released`
 		}
 
-		// if (this.parameters.period) {
-		// 	params.period  = this.parameters.period
+		// if (inputParams.period) {
+		// 	params.period  = inputParams.period
 		// }
 
 		const animes = await this.getAnimes(params)

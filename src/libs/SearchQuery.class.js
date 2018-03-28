@@ -45,21 +45,37 @@ class SearchQuery extends Action {
 			params.status = `ongoing,released`
 		}
 
-		// if (inputParams.period) {
-		// 	params.period  = inputParams.period
-		// }
-
 		const animes = await this.getAnimes(params)
-
 		const firstText = (params.page && params.page > 1) ? `Вот ещё несколько вариантов:` : `Вот, что я могу посоветовать:`
 
-		this.pushMessage({
-			text: {text: [firstText]},
-		})
+		const quickReplies = []
+		if (animes && animes.length) {
+			this.pushMessage({
+				text: {text: [firstText]},
+			})
+
+			quickReplies.push(`Ещё`)
+
+			if (params.order !== `ranked`)   {
+				quickReplies.push(`Лучшее`)
+			}
+			if (params.order !== `aired_on`) {
+				quickReplies.push(`Свежее`)
+			}
+
+			if (!params.kind.includes(`tv`)) {
+				quickReplies.push(`Только сериалы`)
+			}
+			if (!params.kind.includes(`movie`))  {
+				quickReplies.push(`Только полнометражные`)
+			}
+		}
 
 		animes.forEach(anime => {
 			this.pushMessage({
-				card: this.getCard(anime),
+				card        : this.getCard(anime),
+				title       : `quickReplies title`,
+				quickReplies: {quickReplies},
 			})
 		})
 

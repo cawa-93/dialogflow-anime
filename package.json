@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node ./src/index.js",
     "dev": "heroku local:run nodemon --watch src --exec node ./src/index.js",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix"
+    "lint": "eslint ./src"
   },
   "precommit": "lint",
 

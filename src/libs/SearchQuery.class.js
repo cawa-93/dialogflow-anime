@@ -73,11 +73,18 @@ class SearchQuery extends Action {
 
 		animes.forEach(anime => {
 			this.pushMessage({
-				card        : this.getCard(anime),
-				title       : `quickReplies title`,
-				quickReplies: {quickReplies},
+				card: this.getCard(anime),
 			})
 		})
+
+		if (quickReplies.length) {
+			this.pushMessage({
+				quickReplies: {
+					title: `quickReplies title`,
+					quickReplies,
+				},
+			})
+		}
 
 		return await super.toJson()
 	}

@@ -9,7 +9,6 @@
     "lint": "eslint ./src"
   },
   "precommit": "lint",
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cawa-93/dialogflow-anime.git"
@@ -21,14 +20,14 @@
   },
   "homepage": "https://github.com/cawa-93/dialogflow-anime#readme",
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": "^0.18.0",
     "body-parser": "^1.18.2",
-    "express": "^4.16.2",
-    "joi": "^13.1.1"
+    "express": "^4.16.3",
+    "joi": "^13.1.2"
   },
   "devDependencies": {
-    "eslint": "^4.17.0",
-    "nodemon": "^1.14.11",
+    "eslint": "^4.19.1",
+    "nodemon": "^1.17.2",
     "pre-commit": "^1.2.2"
   }
 }

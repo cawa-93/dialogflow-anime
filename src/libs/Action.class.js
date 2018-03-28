@@ -64,7 +64,7 @@ class Action {
 			imageUri: anime.image ? `https://shikimori.org${anime.image.original}` : undefined,
 			buttons : [{
 				text    : `Смотреть`,
-				postback: anime.shortUrl || `https://shikimori.org`+anime.url,
+				postback: anime.shortUrl || `https://relanime.herokuapp.com/${anime.id}/?utm_source=chatbot`,
 			}],
 		}
 	}

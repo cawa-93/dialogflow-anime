@@ -80,6 +80,7 @@ class SearchQuery extends Action {
 		if (quickReplies.length) {
 			this.pushMessage({
 				quickReplies: {
+					title: ``,
 					quickReplies,
 				},
 			})

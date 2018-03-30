@@ -63,10 +63,10 @@ class SearchQuery extends Action {
 				quickReplies.push(`Свежее`)
 			}
 
-			if (!params.kind.includes(`tv`)) {
+			if (params.kind && !params.kind.includes(`tv`)) {
 				quickReplies.push(`Только сериалы`)
 			}
-			if (!params.kind.includes(`movie`))  {
+			if (params.kind && !params.kind.includes(`movie`))  {
 				quickReplies.push(`Только полнометражные`)
 			}
 		}

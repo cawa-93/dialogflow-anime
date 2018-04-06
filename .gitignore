@@ -61,3 +61,5 @@ typings/
 *.sublime-project
 *.sublime-workspace
 .tern-project
+
+\.vscode/

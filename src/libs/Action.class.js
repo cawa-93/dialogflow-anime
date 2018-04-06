@@ -8,6 +8,11 @@ class Action {
 		this.session = session
 	}
 
+	/**
+	 * Return context object
+	 * @param {String} name Context name
+	 * @returns {Object}
+	 */
 	getContext(name) {
 		if (!this.outputContexts) {
 			return undefined
@@ -16,6 +21,9 @@ class Action {
 		return this.outputContexts.find(c => regExp.test(c.name))
 	}
 
+	/**
+	 * @returns {Object} data for dialogflow
+	 */
 	async toJson() {
 		const json = {
 			source: `shikimori.org`,
@@ -32,6 +40,12 @@ class Action {
 		return json
 	}
 
+	/**
+	 * @param {Object} params params for shikimori api
+	 * @param {String} url path for shikimori api
+	 * @param {Boolean} extend load extend data for every result
+	 * @returns {Array} array on animes
+	 */
 	async getAnimes(params, url = `/animes`, extend = true) {
 		if (!params.limit) {
 			params.limit = 3
@@ -49,6 +63,10 @@ class Action {
 		)
 	}
 
+	/**
+	 * @param {Number} id anime ID
+	 * @returns {Object} extended data for single anime
+	 */
 	async getSingleAnime(id) {
 		const {data} = await shikimori.get(`/animes/${id}`)
 		if (data.description_html) {
@@ -57,6 +75,11 @@ class Action {
 		return data
 	}
 
+	/**
+	 * Generate card
+	 * @param {Object} anime anime data
+	 * @returns {Object} card for dialogflow
+	 */
 	getCard(anime) {
 		return {
 			title   : (anime.russian || anime.name) + (anime.score ? ` (${anime.score}/10)` : ``),
@@ -69,6 +92,10 @@ class Action {
 		}
 	}
 
+	/**
+	 * Push message to message stack
+	 * @param {Object} message message data
+	 */
 	pushMessage (message) {
 		if (!message.platform) {
 			message.platform = `PLATFORM_UNSPECIFIED`

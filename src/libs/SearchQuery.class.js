@@ -16,30 +16,37 @@ class SearchQuery extends Action {
 		}
 
 		if (inputParams.genre) {
+			/** @type {String} */
 			params.genre = inputParams.genre.map(g => genres[g]).join(`,`)
 		}
 
 		if (inputParams.kind) {
+			/** @type {String} */
 			params.kind = inputParams.kind.map(k => kinds[k]).join(`,`)
 		}
 
 		if (inputParams.rating) {
+			/** @type {String} */
 			params.rating = inputParams.rating.join(`,`)
 		}
 
 		if (inputParams.order) {
+			/** @type {String} */
 			params.order = inputParams.order
 		}
 
 		if (inputParams.limit) {
+			/** @type {String} */
 			params.limit = inputParams.limit
 		}
 
 		if (inputParams.page) {
+			/** @type {Number} */
 			params.page = inputParams.page
 		}
 
 		if (inputParams.status) {
+			/** @type {String} */
 			params.status = inputParams.status.join(`,`)
 		} else {
 			params.status = `ongoing,released`

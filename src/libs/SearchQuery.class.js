@@ -87,7 +87,7 @@ class SearchQuery extends Action {
 		if (quickReplies.length) {
 			this.pushMessage({
 				quickReplies: {
-					title: ``,
+					title: `Можете уточнять свой запрос`,
 					quickReplies,
 				},
 			})

@@ -29,6 +29,16 @@ class SearchByName extends Action {
 			}),
 		})
 
+		this.pushMessage({
+			platform : `ACTIONS_ON_GOOGLE`,
+			basicCard: this.getBasicCard(anime, {
+				title        : `Все результаты`,
+				openUriAction: {
+					uri: `https://relanime.herokuapp.com/search/?q=${params.search}&utm_source=chatbot`,
+				},
+			}),
+		})
+
 		return await super.toJson()
 	}
 }

@@ -82,6 +82,11 @@ class SearchQuery extends Action {
 			this.pushMessage({
 				card: this.getCard(anime),
 			})
+
+			this.pushMessage({
+				platform : `ACTIONS_ON_GOOGLE`,
+				basicCard: this.getBasicCard(anime),
+			})
 		})
 
 		if (quickReplies.length) {

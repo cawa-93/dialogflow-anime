@@ -103,6 +103,37 @@ class Action {
 	}
 
 	/**
+	 * Generate Basic Card
+	 * @param {Object} anime anime data
+	 * @param {Array | Object} buttons
+	 * @returns {Object} card for dialogflow
+	 */
+	getBasicCard(anime, buttons = null) {
+		let cardButtons = [{
+			title        : `Смотреть онлайн`,
+			openUriAction: {
+				uri: anime.shortUrl || `https://relanime.herokuapp.com/${anime.id}/?utm_source=chatbot`,
+			},
+		}]
+
+		if (buttons) {
+			if (Array.isArray(buttons)) {
+				cardButtons = buttons
+			} else if (typeof buttons === `object`) {
+				cardButtons.push(buttons)
+			}
+		}
+		return {
+			title        : (anime.russian || anime.name) + (anime.score ? ` (${anime.score}/10)` : ``),
+			formattedText: anime.description ? anime.description : ``,
+			image        : {
+				imageUri: anime.image ? `https://shikimori.org${anime.image.original}` : undefined,
+			},
+			buttons: cardButtons,
+		}
+	}
+
+	/**
 	 * Push message to message stack
 	 * @param {Object} message message data
 	 */
